@@ -2,6 +2,7 @@ import json
 from aiogram import F, Router, Bot
 from aiogram.types import Message
 from aiogram.filters import Command
+from keyboards import reply_keyboard, loc_tel_poll_keyboard
 
 
 
@@ -10,7 +11,13 @@ handler = Router()
 
 @handler.message(Command('start'))
 async def start(message: Message):
-    await message.answer('привет')
+    await message.answer('привет', reply_markup=reply_keyboard)
+    
+@handler.message(Command('help'))
+async def start(message: Message):
+    await message.answer('вот другая клавиатура', reply_markup=loc_tel_poll_keyboard)
+
+    
 
 @handler.message(F.text.lower().contains('прив'))
 async def start(message: Message):

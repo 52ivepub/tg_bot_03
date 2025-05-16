@@ -5,6 +5,7 @@ from dotenv import load_dotenv, find_dotenv
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 import asyncio
+from commands import set_commands
 from handlers import handler
 import logging
 
@@ -24,7 +25,7 @@ dp.include_router(handler)
 async def main():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - [%(levelname)s] - %(name)s - '
     '(%(filename)s).%(funcName)s(%(lineno)d) - %(message)s')
-                        
+    await set_commands(bot)                
     dp.startup.register(start)
     dp.shutdown.register(stop)
     await dp.start_polling(bot)
