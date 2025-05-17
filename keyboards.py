@@ -1,4 +1,7 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, KeyboardButtonPollType
+from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
+ KeyboardButtonPollType, InlineKeyboardButton, InlineKeyboardMarkup)
+
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 reply_keyboard = ReplyKeyboardMarkup(keyboard=[
     [
@@ -35,3 +38,38 @@ loc_tel_poll_keyboard = ReplyKeyboardMarkup(keyboard=[
     ],
 ],
 resize_keyboard=True, input_field_placeholder='', one_time_keyboard=False)
+
+# ==========INLINE===============
+
+inline_keys = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text='Iphone 5', 
+                            callback_data='iphone_5')
+    ],
+    [
+        InlineKeyboardButton(text='Iphone 6', 
+                            callback_data='iphone_6')
+    ],
+    [
+        InlineKeyboardButton(text='Iphone 7', 
+                            callback_data='iphone_7')
+    ],
+    [
+        InlineKeyboardButton(text='Iphone 6', 
+                            url='https://novosibirsk.drom.ru/')
+    ],
+])
+
+
+
+# ==========InlineKeyboardBuilder===========
+
+
+def get_inlineKeyboardBuilder():
+    keyboard_builder = InlineKeyboardBuilder()
+    keyboard_builder.button(text='IPHONE 5', callback_data='iphone_5')
+    keyboard_builder.button(text='IPHONE 6', callback_data='iphone_6')
+    keyboard_builder.button(text='IPHONE 7', callback_data='iphone_7')
+
+    keyboard_builder.adjust(2,1)
+    return keyboard_builder.as_markup()

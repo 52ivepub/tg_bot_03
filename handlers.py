@@ -1,8 +1,8 @@
 import json
 from aiogram import F, Router, Bot
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
-from keyboards import reply_keyboard, loc_tel_poll_keyboard
+from keyboards import reply_keyboard, loc_tel_poll_keyboard, inline_keys, get_inlineKeyboardBuilder
 
 
 
@@ -12,6 +12,21 @@ handler = Router()
 @handler.message(Command('start'))
 async def start(message: Message):
     await message.answer('привет', reply_markup=reply_keyboard)
+
+@handler.message(Command('inline'))
+async def start(message: Message):
+    await message.answer('вот инлайн', reply_markup=inline_keys)
+
+@handler.message(Command('bilder'))
+async def start(message: Message):
+    await message.answer('вот bilder', reply_markup=get_inlineKeyboardBuilder())
+
+@handler.callback_query(F.data == 'iphone_5')
+async def callback_send(call: CallbackQuery):
+    await call.answer()
+    await call.message.answer('Вы запросили iphone_5')
+    
+  
     
 @handler.message(Command('help'))
 async def start(message: Message):
