@@ -11,18 +11,24 @@ from keyboards import (
 from middleware import OfficeHoursMiddleware, CounterMiddleware
 from db_connect import Request
 
-
+from form import *
 
 handler = Router()
 
-handler.message.middleware(CounterMiddleware())
+# handler.message.middleware(CounterMiddleware())
 # handler.message.middleware(OfficeHoursMiddleware())   # обрабатывает время когда бот может отвечать
+
+
+class StepsForm(StatesGroup):
+    GET_NAME = State()
+    GET_LAST_NAME = State()
+    GET_AGE = State()
 
 
 
 @handler.message(Command("start"))
 async def start(message: Message, counter: str, request: Request):
-    await request.add_data(message.from_user.id, message.from_user.first_name)
+    # await request.add_data(message.from_user.id, message.from_user.first_name)
 
     await message.answer(f"сообщение # {counter}")
     await message.answer("привет", reply_markup=reply_keyboard)
@@ -31,6 +37,39 @@ async def start(message: Message, counter: str, request: Request):
 @handler.message(Command("inline"))
 async def start(message: Message):
     await message.answer("вот инлайн", reply_markup=inline_keys)
+
+
+@handler.message(Command("form"))
+async def form(message: Message, state: FSMContext):
+    await message.answer(f'{message.from_user.first_name}, начинаем заполнять. Введите имя')
+    # await state.update_data(GET_NAME=message.text)
+    await state.set_state(StepsForm.GET_NAME)
+
+
+
+@handler.message(StepsForm.GET_NAME)
+async def start(message: Message, state: FSMContext):
+    await message.answer(f'Твое имя:\r\n{message.text}\r\nТеперь фамилию')
+    await state.update_data(name=message.text)
+    await state.set_state(StepsForm.GET_LAST_NAME)
+
+
+@handler.message(StepsForm.GET_LAST_NAME)
+async def start(message: Message, state: FSMContext):
+    await message.answer(f'Твоя фамилия: {message.text} Теперь возраст')
+    await state.update_data(last_name=message.text)
+    await state.set_state(StepsForm.GET_AGE)
+    
+
+@handler.message(StepsForm.GET_AGE)
+async def start(message: Message, state: FSMContext):
+    await message.answer(f'Твой возраст: {message.text} ')
+    await state.update_data(age=message.text)
+    context_data = await state.get_data()
+    # context_data = str(context_data)
+    await message.answer(f"{context_data.get('name')}, {context_data.get('last_name')}, {context_data.get('age')}")
+    await state.clear()
+       
 
 
 @handler.message(Command("bilder"))
@@ -64,3 +103,6 @@ async def get_photo(message: Message, bot: Bot):
     await bot.download_file(
         file.file_path, f"media/photo{message.photo[-1].file_id[:5]}.jpg"
     )
+
+
+print('\r')

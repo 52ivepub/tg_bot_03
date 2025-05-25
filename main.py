@@ -31,9 +31,9 @@ async def main():
     await set_commands(bot)                
     dp.startup.register(start)
     dp.shutdown.register(stop)
-    pool_connect = await asyncpg.create_pool(user='postgres', password='1', database='bot', 
-                                             host='127.0.0.1', port=5432, command_timeout=60)
-    dp.update.middleware.register(DbSession(pool_connect))
+    # pool_connect = await asyncpg.create_pool(user='postgres', password='1', database='bot', 
+                                            #  host='127.0.0.1', port=5432, command_timeout=60)
+    # dp.update.middleware.register(DbSession(pool_connect))
     await dp.start_polling(bot)
    
 
