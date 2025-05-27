@@ -8,8 +8,8 @@ class Request:
     def __init__(self, connector: asyncpg.pool.Pool):
         self.connector = connector
 
-    async def add_data(self, user_id, user_name):
-        query = f"INSERT INTO dateuser (user_id, user_name) VALUES ({user_id}, '{user_name}')"\
+    async def add_data(self, first_name, age, last_name):
+        query = f"INSERT INTO users (first_name, last_name, age) VALUES ('{first_name}', '{last_name}', '{age}')"
                 
         await self.connector.execute(query)
 
