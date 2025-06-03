@@ -4,6 +4,7 @@ from aiogram.enums import ParseMode
 from dotenv import load_dotenv, find_dotenv
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage
 import asyncio
 from commands import set_commands
 from handlers import handler
@@ -21,7 +22,11 @@ async def stop(bot: Bot):
     await bot.send_message(chat_id=os.getenv("CHAT_ID"), text='бот остановлен')
 
 bot = Bot(token=os.getenv("TOKEN"), default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-dp = Dispatcher()
+storage = RedisStorage.from_url('redis://localhost:6379/0')
+dp = Dispatcher(storage=storage)
+
+
+
 dp.include_router(handler)
 
 async def main():

@@ -39,6 +39,27 @@ loc_tel_poll_keyboard = ReplyKeyboardMarkup(keyboard=[
 ],
 resize_keyboard=True, input_field_placeholder='', one_time_keyboard=False)
 
+send_file_keyboard = ReplyKeyboardMarkup(keyboard=[
+    [
+        KeyboardButton(
+            text='Отправить фото',
+        )
+    ],
+    [
+        KeyboardButton(
+            text='Отправить аудио',
+            
+        )
+    ],
+    [
+        KeyboardButton(
+            text='Отправить эмоджи',
+            
+        )
+    ],
+],
+resize_keyboard=True, input_field_placeholder='', one_time_keyboard=False)
+
 # ==========INLINE===============
 
 inline_keys = InlineKeyboardMarkup(inline_keyboard=[

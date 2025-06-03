@@ -3,6 +3,7 @@ from aiogram import BaseMiddleware
 from aiogram.types import Message, TelegramObject
 from typing import Dict, Any, Callable, Awaitable
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler_di import ContextSchedulerDecorator
 
 
 class CounterMiddleware(BaseMiddleware):
@@ -21,7 +22,7 @@ class CounterMiddleware(BaseMiddleware):
     
 
 class SchedulerMiddleware(BaseMiddleware):
-    def __init__(self, scheduler: AsyncIOScheduler) -> None:
+    def __init__(self, scheduler: ContextSchedulerDecorator) -> None:
         self.scheduler = scheduler
 
     async def __call__(
