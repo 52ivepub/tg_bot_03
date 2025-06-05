@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import FSInputFile, Message, CallbackQuery
 from aiogram.filters import Command
-from aiogram.utils.chat_action import ChatActionSender
+from aiogram.utils.chat_action import ChatActionMiddleware, ChatActionSender
 from apscheduler.jobstores.redis import RedisJobStore 
 from aiogram.methods.send_message import SendMessage
 from keyboards import (
@@ -39,6 +39,7 @@ handler = Router()
 handler.message.middleware(CounterMiddleware())
 # handler.message.middleware(OfficeHoursMiddleware())   # обрабатывает время когда бот может отвечать
 handler.message.middleware(SchedulerMiddleware(scheduler))
+handler.message.middleware(ChatActionMiddleware())  # создает иллюзию что бот тебе что то набирает
 
 
 class StepsForm(StatesGroup):
@@ -143,11 +144,17 @@ async def start(message: Message):
 
 @handler.message(F.text.lower().contains("отправить аудио"))
 async def start(message: Message, bot: Bot):
-   async with ChatActionSender.upload_voice(bot=bot, chat_id=message.from_user.id): 
-        audio_file = FSInputFile(path=os.path.join(all_media_dir, 'audio.mp3'))
-        msg_id = await message.answer_audio(audio=audio_file, 
-                                            caption="<tg-spoiler><b>Ты супер</b></tg-spoiler>\n")
-        print(msg_id.audio.file_id)
+    audio_file = FSInputFile(path=os.path.join(all_media_dir, 'audio.mp3'))
+    msg_id = await message.answer_audio(audio=audio_file, 
+                                        caption="<tg-spoiler><b>Ты супер</b></tg-spoiler>\n")
+    print(msg_id.audio.file_id)
+
+@handler.message(F.text.lower().contains("отправить эмоджи"))
+async def start(message: Message, bot: Bot):
+    photo_file = FSInputFile(path=os.path.join(all_media_dir, 'sticker.webp'))
+    await message.answer_sticker(sticker=photo_file)
+    await message.answer("<tg-spoiler><b>Ты супер</b>😇</tg-spoiler>\n")
+        
     
 
 @handler.message(F.photo)
